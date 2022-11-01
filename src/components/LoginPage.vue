@@ -25,7 +25,21 @@
         </div>
         <input type="submit" value="Submit" />
       </form>
-      <div class="notification" style="color: #f3d660">{{ responseMsg }}</div>
+      <div class="notification" style="color: #f3d660">
+        {{ responseMsg.msg }}
+      </div>
+      <div
+        v-if="responseMsg.cookie"
+        class="cookie-info"
+        style="margin-top: 5em"
+      >
+        <h3>
+          Only to show what cookie has when session is created. 'This comes from
+          server'
+        </h3>
+        <br />
+        <span style="color: #f3d660">{{ responseMsg.cookie }}</span>
+      </div>
     </div>
     <div class="info">
       <div>To test use: (marko, password123)</div>
@@ -37,6 +51,7 @@
         <li>GET request for form submit</li>
         <li>No login timer after 3 failed attempts</li>
         <li>Error message with a lot of info</li>
+        <li>Session cookie unprotected</li>
       </ul>
 
       <div style="margin-top: 1em">To test use: (marko, ^Ys358J7XnDKr*Yc)</div>
@@ -48,6 +63,16 @@
         <li>POST request for form submit</li>
         <li>Login timer after 3 failed attempts</li>
         <li>Error message with low info</li>
+        <li>
+          Session cookie:
+          <ul class="inside-ul">
+            <li>age</li>
+            <li>expires</li>
+            <li>httponly</li>
+            <li>secure</li>
+            <li>sameSite</li>
+          </ul>
+        </li>
       </ul>
     </div>
   </div>
@@ -79,7 +104,6 @@ export default defineComponent({
         );
 
         const data = await resp.json();
-
         responseMsg.value = data;
       } else {
         const resp = await fetch(`${globals.localUrl}/data/authProtected`, {
@@ -109,12 +133,12 @@ export default defineComponent({
 
 <style scoped>
 .login-container {
-  padding: 5em;
+  padding: 2em;
   display: flex;
   justify-content: center;
   align-items: start;
   width: 70em;
-  height: 50em;
+  height: 40em;
   gap: 5em;
   font-weight: 600;
   letter-spacing: 0.15em;
@@ -136,8 +160,21 @@ export default defineComponent({
   justify-content: start;
   align-items: center;
   background-color: #46627e;
-  width: 40em;
+  width: 70em;
   height: 40em;
+  font-size: 0.9em;
+  gap: 1em;
+  letter-spacing: 0.15em;
+}
+
+.cookie-container {
+  padding: 3em;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  background-color: #46627e;
+  width: 40em;
+  height: 10em;
   font-size: 0.9em;
   gap: 1em;
   letter-spacing: 0.15em;
@@ -146,6 +183,14 @@ export default defineComponent({
 ul {
   display: flex;
   gap: 1em;
+  flex-direction: column;
+  align-items: start;
+}
+
+.inside-ul {
+  padding: 1em;
+  display: flex;
+  gap: 0.5em;
   flex-direction: column;
   align-items: start;
 }
@@ -164,7 +209,9 @@ form {
   margin: 1em;
 }
 
+button,
 input[type="submit"] {
+  padding: 0.5em;
   border-radius: 1em;
   cursor: pointer;
   width: 10em;
@@ -174,6 +221,7 @@ input[type="submit"] {
   background-color: #3e5a77;
 }
 
+button:hover,
 input[type="submit"]:hover {
   background-color: #515151;
 }
