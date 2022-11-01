@@ -13,49 +13,7 @@ export default defineComponent({
   components: {
     LoginPage,
   },
-  setup() {
-    const sqlInjection = ref(false);
-    const sqlName = ref("");
-    const fetchedData = ref("data is displayed here");
-    const globals = useGlobalsStore();
-
-    const onSubmit = async () => {
-      const dataToSend = { name: sqlName.value };
-
-      if (sqlInjection.value) {
-        const resp = await fetch(`${globals.localUrl}/data/sqlNonprotected`, {
-          method: "POST",
-          mode: "cors",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(dataToSend),
-        });
-
-        const data = await resp.json();
-        fetchedData.value = data;
-      } else {
-        const resp = await fetch(`${globals.localUrl}/data/sqlProtected`, {
-          method: "POST",
-          mode: "cors",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(dataToSend),
-        });
-
-        const data = await resp.json();
-        fetchedData.value = data;
-      }
-    };
-
-    return {
-      fetchedData,
-      sqlInjection,
-      sqlName,
-      onSubmit,
-    };
-  },
+  setup() {},
 });
 </script>
 
