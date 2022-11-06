@@ -29,11 +29,12 @@
           type="checkbox"
           v-model="sqlInjection"
         />
-        <label for="toggle-atack">Toggle atack</label>
+        <label for="toggle-atack">Toggle atack option</label>
       </div>
       <input type="submit" value="Submit" />
     </form>
     <h1 style="margin: 2em 0em 1em 0em">Data to display</h1>
+    <div v-if="isLoading" class="loading">...Loading...</div>
     <SqlData :data="fetchedData" />
   </div>
 </template>
@@ -50,12 +51,14 @@ export default defineComponent({
   setup() {
     const sqlInjection = ref(false);
     const sqlName = ref("");
-    const fetchedData = ref("data is displayed here");
+    const fetchedData = ref("data will be displayed here");
     const globals = useGlobalsStore();
+    const isLoading = ref(false);
 
     const onSubmit = async () => {
       const dataToSend = { name: sqlName.value };
 
+      isLoading.value = true;
       if (sqlInjection.value) {
         const resp = await fetch(`${globals.localUrl}/data/sqlNonprotected`, {
           method: "POST",
@@ -81,9 +84,11 @@ export default defineComponent({
         const data = await resp.json();
         fetchedData.value = data;
       }
+      isLoading.value = false;
     };
 
     return {
+      isLoading,
       fetchedData,
       sqlInjection,
       sqlName,

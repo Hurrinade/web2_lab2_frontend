@@ -21,11 +21,12 @@
             type="checkbox"
             v-model="brokenAuthToggle"
           />
-          <label for="toggle-atack">Toggle atack</label>
+          <label for="toggle-atack">Toggle atack option</label>
         </div>
         <input type="submit" value="Submit" />
       </form>
-      <div class="notification" style="color: #f3d660">
+      <div v-if="isLoading" class="loading">...Loading...</div>
+      <div v-if="!isLoading" class="notification" style="color: #f3d660">
         {{ responseMsg.msg }}
       </div>
       <div
@@ -89,10 +90,12 @@ export default defineComponent({
     const password = ref("");
     const responseMsg = ref("");
     const globals = useGlobalsStore();
+    const isLoading = ref(false);
 
     const onSubmit = async () => {
       const dataToSend = { username: username.value, password: password.value };
 
+      isLoading.value = true;
       if (brokenAuthToggle.value) {
         const resp = await fetch(
           `${globals.localUrl}/data/authNotProtected?` +
@@ -118,9 +121,11 @@ export default defineComponent({
         const data = await resp.json();
         responseMsg.value = data;
       }
+      isLoading.value = false;
     };
 
     return {
+      isLoading,
       responseMsg,
       brokenAuthToggle,
       username,
@@ -161,7 +166,7 @@ export default defineComponent({
   align-items: center;
   background-color: #46627e;
   width: 70em;
-  height: 40em;
+  height: 42em;
   font-size: 0.9em;
   gap: 1em;
   letter-spacing: 0.15em;

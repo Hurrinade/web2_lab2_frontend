@@ -128,4 +128,9 @@ html {
   background-color: #445f79;
   color: rgb(255, 0, 0);
 }
+
+.loading {
+  color: greenyellow;
+  margin-bottom: 2em;
+}
 </style>
